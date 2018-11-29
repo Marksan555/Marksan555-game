@@ -10,12 +10,14 @@ var Engine = Matter.Engine,
     Composites = Matter.Composites,
     Common = Matter.Common,
     MouseConstraint = Matter.MouseConstraint,
+    Constraint = Matter.Constraint,
     Mouse = Matter.Mouse,
     World = Matter.World,
     Query = Matter.Query,
     Svg = Matter.Svg,
     Bodies = Matter.Bodies,
-    Body = Matter.Body;
+    Body = Matter.Body,
+    Vector = Matter.Vector;
 
 // create engine
 var engine = Engine.create(),
@@ -65,8 +67,18 @@ $.get('https://raw.githubusercontent.com/liabru/matter-js/master/demo/svg/terrai
         restitution: 0.6
     };
 
-    const hero = Bodies.rectangle(400, 200, 10, 20, { inertia: Infinity });
-    World.add(world, hero);
+    var partA = Bodies.rectangle(400, 200, 15, 30, { inertia: Infinity });
+    var partB = Bodies.rectangle(412, 200, 10, 5);
+    var partC = Bodies.rectangle(410, 205, 5, 5);
+    var hero = Body.create({parts: [partA, partB, partC]});
+    var constr = Constraint.create({
+        bodyA: partA,
+        bodyB: partB,
+        length: 50,
+        stiffness: 0.1
+    });
+
+    World.add(world, hero, constr);
 
     let jump = false;
     let right = false;
