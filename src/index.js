@@ -52,6 +52,7 @@ $.get('https://raw.githubusercontent.com/liabru/matter-js/master/demo/svg/terrai
 
     terrain = Bodies.fromVertices(400, 350, vertexSets, {
         isStatic: true,
+        label: 'map',
         render: {
             fillStyle: '#fff',
             strokeStyle: '#fff',
@@ -67,47 +68,80 @@ $.get('https://raw.githubusercontent.com/liabru/matter-js/master/demo/svg/terrai
         restitution: 0.6
     };
 
-    var partA = Bodies.rectangle(400, 200, 15, 30, { inertia: Infinity });
-    var partB = Bodies.rectangle(412, 200, 10, 5);
-    var partC = Bodies.rectangle(410, 205, 5, 5);
-    var hero = Body.create({parts: [partA, partB, partC]});
-    var constr = Constraint.create({
-        bodyA: partA,
-        bodyB: partB,
-        length: 50,
-        stiffness: 0.1
+    // var partA = Bodies.rectangle(400, 200, 15, 30, { inertia: Infinity });
+    // var partB = Bodies.rectangle(412, 200, 10, 5);
+    // var partC = Bodies.rectangle(410, 205, 5, 5);
+    // var hero = Body.create({parts: [partA, partB, partC]});
+    // var constr = Constraint.create({
+    //     bodyA: partA,
+    //     bodyB: partB,
+    //     length: 50,
+    //     stiffness: 0.1
+    // });
+
+    // World.add(world, hero, constr);
+
+
+
+    var body = Bodies.rectangle(400, 200, 15, 30, { inertia: Infinity });
+    var gun = Bodies.rectangle(400, 200, 30, 5);
+
+    var hero = Body.create({
+        parts: [body, gun]
     });
 
-    World.add(world, hero, constr);
+    var collider = Bodies.circle(650, 430, 30);
+    
+
+    // var constraint = Constraint.create({
+    //     bodyA: hero,
+    //     bodyB: ball
+    // });
+
+    World.add(world, [hero, collider]);
 
     let jump = false;
     let right = false;
     let left = false;
+    let shoot = false;
+
+    let angleUp = false;
+    let angleDown = false;
 
 
     // HERO LEFT and RIGHT
     $('body').on('keydown', function(e) {
-        if (e.which === 37) { // left arrow key
+        if (e.which === 65) { // left arrow key
             // Body.setVelocity( hero, {x: -3, y: hero.force.y});
             left = true;
-        } else if (e.which === 39) { // right arrow key
+        } else if (e.which === 68) { // right arrow key
             // Body.setVelocity( hero, {x: 3, y: hero.force.y});
             right = true;
-        } else if (e.which === 38) {
+        } else if (e.which === 87) {
             jump = true;
-        }
+        } else if (e.which === 38) {
+            angleUp = true;
+        } else if (e.which === 40) {
+            angleDown = true;
+        } 
     });
 
     // HERO JUMP
     $('body').on('keyup', function(e) {
-        if (e.which === 38) { // left arrow key
+        if (e.which === 87) { // left arrow key
             jump = false;
-        } else if (e.which === 37) { // left arrow key
+        } else if (e.which === 65) { // left arrow key
             left = false;
-        } else if (e.which === 39) { // right arrow key
+        } else if (e.which === 68) { // right arrow key
             // Body.setVelocity( hero, {x: 3, y: hero.force.y});
             right = false;
-        }
+        } else if (e.which === 32) {
+            shoot = true;
+        } else if (e.which === 38) {
+            angleUp = false;
+        } else if (e.which === 40) {
+            angleDown = false;
+        } 
     });
 
     Matter.Events.on(engine, 'beforeUpdate', function(event) {
@@ -119,6 +153,35 @@ $.get('https://raw.githubusercontent.com/liabru/matter-js/master/demo/svg/terrai
         }
         if (jump) {
             Body.setVelocity( hero, {x: hero.velocity.x, y: -7});
+        }
+        if (shoot) {
+            shoot = false;
+            var bullet = Bodies.circle(hero.position.x+5, hero.position.y, 3, {label: 'bullet'});
+            World.add(world, [bullet]);
+
+            Body.setVelocity( bullet, {x: Math.cos(gun.angle)*10, y: Math.sin(gun.angle)*10});
+        }
+        if (angleUp) {
+            Body.setAngle( gun, gun.angle - 0.1);
+        }
+        if (angleDown) {
+            Body.setAngle( gun, gun.angle + 0.1);
+        }
+    });
+    Matter.Events.on(engine, 'collisionStart', function(event) {
+        var pairs = event.pairs;
+        
+        for (var i = 0, j = pairs.length; i != j; ++i) {
+            var pair = pairs[i];
+            if (pair.bodyA === collider && pair.bodyB.label === 'bullet' ) {
+                Matter.Composite.remove(world, collider);
+            } else if (pair.bodyB === collider && pair.bodyA.label === 'bullet') {
+                Matter.Composite.remove(world, collider);
+            } else if (pair.bodyA.label === 'map' && pair.bodyB.label === 'bullet' ) {
+                Matter.Composite.remove(world, pair.bodyB);
+            } else if (pair.bodyB.label === 'map' && pair.bodyA.label === 'bullet' ) {
+                Matter.Composite.remove(world, pair.bodyA);
+            }
         }
     });
 
