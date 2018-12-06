@@ -68,21 +68,6 @@ $.get('https://raw.githubusercontent.com/liabru/matter-js/master/demo/svg/terrai
         restitution: 0.6
     };
 
-    // var partA = Bodies.rectangle(400, 200, 15, 30, { inertia: Infinity });
-    // var partB = Bodies.rectangle(412, 200, 10, 5);
-    // var partC = Bodies.rectangle(410, 205, 5, 5);
-    // var hero = Body.create({parts: [partA, partB, partC]});
-    // var constr = Constraint.create({
-    //     bodyA: partA,
-    //     bodyB: partB,
-    //     length: 50,
-    //     stiffness: 0.1
-    // });
-
-    // World.add(world, hero, constr);
-
-
-
     var body = Bodies.rectangle(400, 200, 15, 30, { inertia: Infinity });
     var gun = Bodies.rectangle(400, 200, 30, 5);
 
@@ -92,12 +77,6 @@ $.get('https://raw.githubusercontent.com/liabru/matter-js/master/demo/svg/terrai
 
     var collider = Bodies.circle(650, 430, 30);
     
-
-    // var constraint = Constraint.create({
-    //     bodyA: hero,
-    //     bodyB: ball
-    // });
-
     World.add(world, [hero, collider]);
 
     let jump = false;
@@ -112,10 +91,9 @@ $.get('https://raw.githubusercontent.com/liabru/matter-js/master/demo/svg/terrai
     // HERO LEFT and RIGHT
     $('body').on('keydown', function(e) {
         if (e.which === 65) { // left arrow key
-            // Body.setVelocity( hero, {x: -3, y: hero.force.y});
             left = true;
         } else if (e.which === 68) { // right arrow key
-            // Body.setVelocity( hero, {x: 3, y: hero.force.y});
+           
             right = true;
         } else if (e.which === 87) {
             jump = true;
@@ -132,8 +110,7 @@ $.get('https://raw.githubusercontent.com/liabru/matter-js/master/demo/svg/terrai
             jump = false;
         } else if (e.which === 65) { // left arrow key
             left = false;
-        } else if (e.which === 68) { // right arrow key
-            // Body.setVelocity( hero, {x: 3, y: hero.force.y});
+        } else if (e.which === 68) { // right arrow key         
             right = false;
         } else if (e.which === 32) {
             shoot = true;
