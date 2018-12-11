@@ -5,7 +5,7 @@ git clone https://github.com/Marksan555/game.git
 ```
 ### NPM Install ###
 ```sh
-npm install matter.js
+npm install
 ```
 Then run it
 ```js
