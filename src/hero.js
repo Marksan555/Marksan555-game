@@ -116,9 +116,14 @@ const onCollisionStart = (event, world, collider) => {
         }
 }
 
+const getBody = () => {
+    return hero;
+}
+
 export default {
     init,
     add,
     onUpdate,
-    onCollisionStart
+    onCollisionStart,
+    getBody
 };

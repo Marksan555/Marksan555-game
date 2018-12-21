@@ -3,7 +3,7 @@ import Matter from 'matter-js';
 import $ from 'jquery';
 import Hero from './hero.js';
 import Map from './map.js';
-
+import View from './view.js';
 
 const init = () => {
     var Engine = Matter.Engine,
@@ -18,6 +18,7 @@ const init = () => {
     Query = Matter.Query,
     Svg = Matter.Svg,
     Bodies = Matter.Bodies,
+    Bounds = Matter.Bounds,
     Body = Matter.Body,
     Vector = Matter.Vector;
     
@@ -27,11 +28,13 @@ const init = () => {
     
     // create renderer
     var render = Render.create({
-    element: document.body,
+    element: document.getElementById('container'),
     engine: engine,
     options: {
-        width: 800,
-        height: 600
+        width: 1280,
+        height: 720,
+        pixelRatio: 3,
+        wireframeBackground: '#FFFFF',
     }
     });
     
@@ -40,17 +43,20 @@ const init = () => {
     // create runner
     var runner = Runner.create();
     Runner.run(runner, engine);
+
+    
     
     Map.init(world);
     Hero.init();
     Hero.add(world);
-
+    
        
     var collider = Matter.Bodies.circle(650, 430, 30);
     Matter.World.add(world, [collider]);
 
     Matter.Events.on(engine, 'beforeUpdate', function(event) {
-        Hero.onUpdate(world)
+        Hero.onUpdate(world);
+        View.setCameraView(render, world, Hero.getBody());
     });
 
     Matter.Events.on(engine, 'collisionStart', function(event) {
@@ -61,7 +67,7 @@ const init = () => {
     
     Render.lookAt(render, {
     min: { x: 0, y: 0 },
-    max: { x: 800, y: 600 }
+    max: { x: 1280, y: 720 }
     });
     
 }
