@@ -4,13 +4,12 @@ import svg from './../assets/svg/drawing.svg'
 var terrain;
 
 const init = (world) => {
-    terrain = Matter.Bodies.rectangle(400, 200, 300, 5);
+    terrain = Matter.Bodies.rectangle(400, 200, 300, 5); 
     
     $.get(svg).done(function(data) {
     var vertexSets = [];
     
     $(data).find('path').each(function(i, path) {
-        console.log(path);
         vertexSets.push(Matter.Svg.pathToVertices(path, 30));
     });
     
@@ -25,7 +24,7 @@ const init = (world) => {
     }, true);
     Matter.World.add(world, terrain);
     })
-}
+}                                                   //  adding the terrain to the game
 
 const add = (world) => {
     
