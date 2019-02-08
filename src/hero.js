@@ -1,10 +1,11 @@
 import Matter from 'matter-js';
 import $ from 'jquery';
+import Config from './config';
 
 let hero;
 let gun;
 
-let jump = false;      
+let jump = false;
 let right = false;
 let left = false;
 let shoot = false;
@@ -14,28 +15,28 @@ let angleDown = false;
 
 let canJump = false;
 
-const init = (world) => {
-    let bodyOptions = {
-        frictionAir: 0,
-        friction: 0.0001,
-        restitution: 0.6
-    };
-    
-    let body = Matter.Bodies.rectangle(400, 200, 15, 30, { inertia: Infinity, label: 'body', }); // creating a part of a gun and putting a label on it
-    gun = Matter.Bodies.rectangle(400, 200, 30, 5); // creating a second part of a gun
-    
+const init = (level) => {
+
+    const config = Config.getHeroConfig(level);
+
+    let body = Matter.Bodies.rectangle(config.x, config.y, 15, 30, { inertia: Infinity, label: 'body', });
+    gun = Matter.Bodies.rectangle(config.x+10, config.y-10, 20, 4);
+
+    gun.position.x = gun.bounds.min.x+2;
+    gun.position.y = gun.bounds.min.y;
+    gun.positionPrev.x = gun.bounds.min.x+2;
+    gun.positionPrev.y = gun.bounds.min.y;
+
     hero = Matter.Body.create({
         parts: [body, gun]          // composing 2 parts into 1
     });
 
-    
-    
     // HERO LEFT and RIGHT
     $('body').on('keydown', function(e) {
         if (e.which === 65) { // left arrow key
             left = true;
         } else if (e.which === 68) { // right arrow key
-           
+
             right = true;
         } else if (e.which === 87) { // "W" key
             jump = true;
@@ -43,16 +44,16 @@ const init = (world) => {
             angleUp = true;
         } else if (e.which === 40) { // down arrow key
             angleDown = true;
-        } 
+        }
     });
-    
+
     // HERO JUMP
     $('body').on('keyup', function(e) {
         if (e.which === 87) { // left arrow key
             jump = false;
         } else if (e.which === 65) { // left arrow key
             left = false;
-        } else if (e.which === 68) { // right arrow key         
+        } else if (e.which === 68) { // right arrow key
             right = false;
         } else if (e.which === 32) { // SPACE key
             shoot = true;
@@ -60,21 +61,21 @@ const init = (world) => {
             angleUp = false;
         } else if (e.which === 40) { // down arrow key
             angleDown = false;
-        } 
+        }
     });
 
-}
+};
 
 const add = (world) => {
     Matter.World.add(world, [hero]);
-}
+};
 
 const onUpdate = (world) => {
         if (left) {
-            Matter.Body.setVelocity( hero, {x: -3, y: hero.velocity.y}); // if the player presses <, game will force the hero to the left 
+            Matter.Body.setVelocity( hero, {x: -3, y: hero.velocity.y}); // if the player presses <, game will force the hero to the left
         }
         if (right) {
-            Matter.Body.setVelocity( hero, {x: 3, y: hero.velocity.y});  // if the player presses >, game will force the hero to the right 
+            Matter.Body.setVelocity( hero, {x: 3, y: hero.velocity.y});  // if the player presses >, game will force the hero to the right
         }
         if (jump && canJump) {
             canJump = false;
@@ -84,7 +85,7 @@ const onUpdate = (world) => {
             shoot = false;
             var bullet = Matter.Bodies.circle(hero.position.x+5, hero.position.y, 3, {label: 'bullet'}); //creating a body("bullet") and putting a label on it
             Matter.World.add(world, [bullet]);      // adding "bullet" to the world
-    
+
             Matter.Body.setVelocity( bullet, {x: Math.cos(gun.angle)*10, y: Math.sin(gun.angle)*10}); // Sets the linear velocity of the body instantly.
         }
         if (angleUp) {
@@ -99,7 +100,7 @@ var blueColor = '#4ECDC4';
 const makeFire = (x, y, world) => {
     x = x + parseInt(Math.random()*20 - 10);
     y = y + parseInt(Math.random()*20 - 10); // letting the gun to shoot
-    let i = 0; 
+    let i = 0;
     setInterval(()=> {
         i = i + 1;
         if (i < 10) {
@@ -113,34 +114,34 @@ const makeFire = (x, y, world) => {
             Matter.World.add(world, el);
         }
     }, 10);
-}
+};
 
 const onCollisionStart = (event, world) => {
-        var pairs = event.pairs;
-        
-        for (var i = 0, j = pairs.length; i != j; ++i) {
-            var pair = pairs[i];
-            if (pair.bodyA.label === 'ball' && pair.bodyB.label === 'bullet' ) {           
-                Matter.Composite.remove(world, pair.bodyA);                                
-                makeFire(pair.bodyA.position.x, pair.bodyA.position.y, world);             // if the bullet hits the ball, the ball will be removed from the world
-            } else if (pair.bodyB.label === 'ball' && pair.bodyA.label === 'bullet') {     
-                Matter.Composite.remove(world, pair.bodyB);                                
-                makeFire(pair.bodyA.position.x, pair.bodyA.position.y, world);             
-            } else if (pair.bodyA.label === 'map' && pair.bodyB.label === 'bullet' ) {     // if the bullet hits the map, the bullet will dissappear
-                Matter.Composite.remove(world, pair.bodyB);
-            } else if (pair.bodyB.label === 'map' && pair.bodyA.label === 'bullet' ) {
-                Matter.Composite.remove(world, pair.bodyA);
-            } else if (pair.bodyA.label === 'body' && pair.bodyB.label === 'map') {         // prevent the hero jumping endlessly
-                canJump = true;
-            } else if (pair.bodyA.label === 'map' && pair.bodyB.label === 'body') {
-                canJump = true;
-            }
+    var pairs = event.pairs;
+
+    for (var i = 0, j = pairs.length; i != j; ++i) {
+        var pair = pairs[i];
+        if (pair.bodyA.label === 'ball' && pair.bodyB.label === 'bullet') {
+            Matter.Composite.remove(world, pair.bodyA);
+            // makeFire(pair.bodyA.position.x, pair.bodyA.position.y, world);             // if the bullet hits the ball, the ball will be removed from the world
+        } else if (pair.bodyB.label === 'ball' && pair.bodyA.label === 'bullet') {
+            Matter.Composite.remove(world, pair.bodyB);
+            // makeFire(pair.bodyA.position.x, pair.bodyA.position.y, world);
+        } else if (pair.bodyA.label === 'map' && pair.bodyB.label === 'bullet') {     // if the bullet hits the map, the bullet will dissappear
+            Matter.Composite.remove(world, pair.bodyB);
+        } else if (pair.bodyB.label === 'map' && pair.bodyA.label === 'bullet') {
+            Matter.Composite.remove(world, pair.bodyA);
+        } else if (pair.bodyA.label === 'body' && pair.bodyB.label === 'map') {         // prevent the hero jumping endlessly
+            canJump = true;
+        } else if (pair.bodyA.label === 'map' && pair.bodyB.label === 'body') {
+            canJump = true;
         }
-}
+    }
+};
 
 const getBody = () => {
     return hero;
-}
+};
 
 export default {
     init,
