@@ -58,5 +58,5 @@ const setCameraView = (render, world, body) => {
 };
 
 export default {
-    setCameraView
-}
+    setCameraView,
+};
