@@ -34,19 +34,23 @@ const init = () => {
     Runner.run(runner, engine);
 
 
+    const level = 2;
 
-    setInterval(() => {
-        Bot.add(world);     // setting an inteval for adding the bot to the world(1sec)
-    }, 1000);
-
-
-    Map.initLevel(1, world);
-    Hero.init(1);
+    Map.initLevel(level, world);
+    Hero.init(level);
     Hero.add(world);
+    Bot.init(level, world);
 
 
-    // var collider = Matter.Bodies.circle(650, 430, 30);
-    // Matter.World.add(world, [collider]);
+    const box = Matter.Bodies.rectangle(700, 540, 40, 40, {label: 'finish'} );
+    Matter.World.add(world, box);
+
+    const onFinish = () => {
+        render.canvas.remove();
+        render.canvas = null;
+        render.context = null;
+        render.textures = {};
+    };
 
     Matter.Events.on(engine, 'beforeUpdate', function(event) {
         Hero.onUpdate(world);
@@ -54,7 +58,7 @@ const init = () => {
     });
 
     Matter.Events.on(engine, 'collisionStart', function(event) {
-        Hero.onCollisionStart(event, world);
+        Hero.onCollisionStart(event, world, Bot.onKillBot, onFinish);
     });
 
     Render.lookAt(render, {

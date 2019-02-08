@@ -116,16 +116,17 @@ const makeFire = (x, y, world) => {
     }, 10);
 };
 
-const onCollisionStart = (event, world) => {
+const onCollisionStart = (event, world, onKillBot, onFinish) => {
     var pairs = event.pairs;
 
     for (var i = 0, j = pairs.length; i != j; ++i) {
         var pair = pairs[i];
         if (pair.bodyA.label === 'ball' && pair.bodyB.label === 'bullet') {
-            Matter.Composite.remove(world, pair.bodyA);
+            // Matter.World.remove(world, pair.bodyA.parent.parts[0]);
+            onKillBot(pair.bodyA.parent);
             // makeFire(pair.bodyA.position.x, pair.bodyA.position.y, world);             // if the bullet hits the ball, the ball will be removed from the world
         } else if (pair.bodyB.label === 'ball' && pair.bodyA.label === 'bullet') {
-            Matter.Composite.remove(world, pair.bodyB);
+            Matter.World.remove(world, pair.bodyB);
             // makeFire(pair.bodyA.position.x, pair.bodyA.position.y, world);
         } else if (pair.bodyA.label === 'map' && pair.bodyB.label === 'bullet') {     // if the bullet hits the map, the bullet will dissappear
             Matter.Composite.remove(world, pair.bodyB);
@@ -135,6 +136,10 @@ const onCollisionStart = (event, world) => {
             canJump = true;
         } else if (pair.bodyA.label === 'map' && pair.bodyB.label === 'body') {
             canJump = true;
+        } else if (pair.bodyA.label === 'body' && pair.bodyB.label === 'finish') {         // prevent the hero jumping endlessly
+            onFinish();
+        } else if (pair.bodyA.label === 'finish' && pair.bodyB.label === 'body') {
+            onFinish();
         }
     }
 };
