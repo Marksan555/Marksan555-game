@@ -13,6 +13,7 @@ const init = (world) => {
     });
 
     terrain = Matter.Bodies.fromVertices(400, 600, vertexSets, {
+        collisionFilter: {category: 1},
         isStatic: true,
         label: 'map',
         render: {
@@ -45,6 +46,7 @@ const getBodyFromConfig = (path, x, y, world) => {
         });
 
         const terrain = Matter.Bodies.fromVertices(x, y, vertexSets, {
+            collisionFilter: {category: 1},
             isStatic: true,
             label: 'map',
             render: {

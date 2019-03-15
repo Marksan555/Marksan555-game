@@ -16,8 +16,24 @@ const createFromConfig = (x, y, type) => {
 };
 
 const createBall = (x, y) => {
-    const box = Matter.Bodies.rectangle(x, y+20, 40, 40, {label: 'ball'} );
-    const collider = Matter.Bodies.circle(x, y, 15, {label: 'ball', isStatic: true});
+    const box = Matter.Bodies.rectangle(x, y+20, 40, 40, {
+        label: 'ball',
+        render: {
+            sprite: {
+                texture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Sprite_logo.jpg/900px-Sprite_logo.jpg',
+                xScale: 0.05,
+                yScale: 0.05,
+            }
+        }
+    } );
+    const collider = Matter.Bodies.circle(x, y, 15, {label: 'ball', isStatic: true,
+    render: {
+        sprite: {
+            texture: 'http://bucharestgamingweek.ro/wp-content/uploads/2018/11/kisspng-sprite-logo-coca-cola-fanta-brand-5b76a9d68aab95.686730951534503382568.jpg',
+            xScale: 0.05,
+            yScale: 0.05,
+        }
+    }});
 
     const bot = Matter.Body.create({
         parts: [collider, box],          // composing 2 parts into 1
@@ -28,7 +44,15 @@ const createBall = (x, y) => {
 };
 
 const createBox = (x, y) => {
-    const box = Matter.Bodies.rectangle(x, y, 40, 40, {label: 'map'} );
+    const box = Matter.Bodies.rectangle(x, y, 60, 60, {
+        label: 'map',
+        render: {
+            sprite: {
+                texture: 'https://cdn0.iconfinder.com/data/icons/sports-colored-icons-3/48/112-512.png',
+                xScale: 0.12,
+                yScale: 0.12,
+        }
+    }} );
     Matter.World.add(world, box);
 };
 

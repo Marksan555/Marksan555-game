@@ -1,9 +1,11 @@
 import Matter from 'matter-js';
 import $ from 'jquery';
 import Config from './config';
+import sprite from '../assets/sprites/hero5.png';
 
 let hero;
 let gun;
+let body;
 
 let jump = false;
 let right = false;
@@ -19,17 +21,49 @@ const init = (level) => {
 
     const config = Config.getHeroConfig(level);
 
-    let body = Matter.Bodies.rectangle(config.x, config.y, 15, 30, { inertia: Infinity, label: 'body', });
-    gun = Matter.Bodies.rectangle(config.x+10, config.y-10, 20, 4);
-
-    gun.position.x = gun.bounds.min.x+2;
-    gun.position.y = gun.bounds.min.y;
-    gun.positionPrev.x = gun.bounds.min.x+2;
-    gun.positionPrev.y = gun.bounds.min.y;
-
-    hero = Matter.Body.create({
-        parts: [body, gun]          // composing 2 parts into 1
+    hero = Matter.Bodies.rectangle(config.x, config.y, 15, 30, { 
+        collisionFilter: {category: 1},
+        inertia: Infinity, 
+        label: 'body', 
+        render: {
+            // options: {
+            //     heigth: 20,
+            //     width: 20,
+            // },
+            sprite: {
+                texture: 'https://www.clipartmax.com/png/small/415-4151823_black-widow-sprite-16-bit-mega-man.png',
+                xScale: 0.06,
+                yScale: 0.1,
+            }
+        }
     });
+    gun = Matter.Bodies.rectangle(config.x, config.y, 20, 4, { collisionFilter: {mask: 2}});
+    // gun.position.x = gun.bounds.min.x+2;
+    // gun.position.y = gun.bounds.min.y;
+    // gun.positionPrev.x = gun.bounds.min.x+2;
+    // gun.positionPrev.y = gun.bounds.min.y;
+
+
+    body = Matter.Constraint.create({
+        bodyA: hero,
+        bodyB: gun,
+        render: {
+            // options: {
+                // heigth: 20,
+                // width: 20,
+            // },
+            sprite: {
+                texture: 'https://unixtitan.net/images/vector-sprites-sonic-classic-hero-2.png',
+                // xScale: 0.05,
+                // yScale: 0.1,
+            }
+        
+        // length: 0
+        }});
+
+    // hero = Matter.Body.create({
+    //     parts: [body, gun],          // composing 2 parts into 1
+    // });
 
     // HERO LEFT and RIGHT
     $('body').on('keydown', function(e) {
@@ -67,7 +101,7 @@ const init = (level) => {
 };
 
 const add = (world) => {
-    Matter.World.add(world, [hero]);
+    Matter.World.add(world, [body, gun, hero]);
 };
 
 const onUpdate = (world) => {

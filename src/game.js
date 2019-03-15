@@ -22,8 +22,11 @@ const init = () => {
             width: 1280,
             height: 720,
             // pixelRatio: 3,              // setting a resolution for a game
-            wireframeBackground: '#FFFFF',
+            // wireframeBackground: ('#FFFFF'),
             // hasBounds: true,
+            wireframes: false,
+            showAngleIndicator: false,
+            background: '#FFF'
         }
     });
 
@@ -34,7 +37,7 @@ const init = () => {
     Runner.run(runner, engine);
 
 
-    const level = 2;
+    const level = 3;
 
     Map.initLevel(level, world);
     Hero.init(level);
@@ -42,14 +45,23 @@ const init = () => {
     Bot.init(level, world);
 
 
-    const box = Matter.Bodies.rectangle(700, 540, 40, 40, {label: 'finish'} );
+    const box = Matter.Bodies.rectangle(700, 540, 40, 40, {label: 'finish',
+    render: {
+        sprite: {
+            texture: 'https://cdn0.iconfinder.com/data/icons/sports-colored-icons-3/48/110-512.png',
+            xScale: 0.1,
+            yScale: 0.1,
+        }
+    }
+},
+    );
     Matter.World.add(world, box);
 
     const onFinish = () => {
-        render.canvas.remove();
-        render.canvas = null;
-        render.context = null;
-        render.textures = {};
+        // render.canvas.remove();
+        // render.canvas = null;
+        // render.context = null;
+        // render.textures = {};
     };
 
     Matter.Events.on(engine, 'beforeUpdate', function(event) {
