@@ -1,13 +1,3 @@
 .idea
 node_modules
 dist
-npm-debug.log*
-.npm
-
-### OSX ###
-.DS_Store
-.AppleDouble
-.LSOverride
-
-.settings/
-.vscode/
