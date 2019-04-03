@@ -20,8 +20,13 @@ const getBotsConfig = (level) => {
     return levels[level-1].bots ? levels[level-1].bots : [];
 };
 
+const getFinishConfig = (level) => {
+    return levels[level-1].finish ? levels[level-1].finish : {};
+};
+
 export default {
     getLevelConfig,
     getHeroConfig,
     getBotsConfig,
+    getFinishConfig
 };

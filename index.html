@@ -10,11 +10,41 @@
         #container {
             margin: 0 auto;
         }
+        #game-over {
+            display: none;
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: 100%;
+            text-align: center;
+            background: white;
+            height: 100%;
+        }
+        #start-game {
+            display: block;
+            position: absolute;
+            top: 1px;
+            left: 1px;
+            width: 100%;
+            text-align: center;
+            background: white;
+            height: 100%;
+        }
     </style>
 </head>
 <body>
+    <div class="text" style="position: absolute" id="start-game">
+        <h1 style="color: blue; font-size: 60pt;">SHOOTER</h1>
+        <p style="text-align: center"><input type="button" value="Play" onclick="startGame()"></p>
+    </div>
     <div class="wrapper">
         <div id="container"></div>
+    </div>
+    <div class="text" style="position: absolute" id="game-over">
+        <h1 style="color: red; font-size: 60pt">GAME OVER</h1>
+        <form method="GET" action="http://localhost:8080/">
+            <p><input type="submit" value="Play Again"></p>
+        </form>
     </div>
     
     <script src="bundle.js"></script>

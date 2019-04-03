@@ -30,9 +30,11 @@ import Config from './config';
 
 const initLevel = (level, world) => {
     const levelConfig = Config.getLevelConfig(level);
+    const FinishConfig = Config.getFinishConfig(level);
     levelConfig.svgs.map((svg) => {
         getBodyFromConfig(svg.path, svg.x, svg.y, world);
     });
+    renderFinish(FinishConfig, world);
 };
 
 const getBodyFromConfig = (path, x, y, world) => {
@@ -65,6 +67,20 @@ const getBodyFromConfig = (path, x, y, world) => {
 
     });
 };
+
+const renderFinish = (config, world) => {
+    const box = Matter.Bodies.rectangle(config.x, config.y, 40, 40, {label: 'finish',
+    render: {
+        sprite: {
+            texture: 'https://cdn0.iconfinder.com/data/icons/sports-colored-icons-3/48/110-512.png',
+            xScale: 0.1,
+            yScale: 0.1,
+        }
+    }
+    },
+    );
+    Matter.World.add(world, box);
+}
 
 
 const add = (world) => {

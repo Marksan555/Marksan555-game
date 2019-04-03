@@ -36,33 +36,36 @@ const init = () => {
     var runner = Runner.create();
     Runner.run(runner, engine);
 
-
-    const level = 3;
+    let level = 1;
 
     Map.initLevel(level, world);
     Hero.init(level);
     Hero.add(world);
     Bot.init(level, world);
 
+ 
 
-    const box = Matter.Bodies.rectangle(700, 540, 40, 40, {label: 'finish',
-    render: {
-        sprite: {
-            texture: 'https://cdn0.iconfinder.com/data/icons/sports-colored-icons-3/48/110-512.png',
-            xScale: 0.1,
-            yScale: 0.1,
-        }
-    }
-},
-    );
-    Matter.World.add(world, box);
 
     const onFinish = () => {
-        // render.canvas.remove();
-        // render.canvas = null;
-        // render.context = null;
-        // render.textures = {};
-    };
+    //  render.canvas.remove();
+    //  render.canvas = null;
+    //  render.context = null;
+    //  render.textures = {};
+        level = level + 1;
+        if (level == 4) {
+            document.getElementById("game-over").style.display = "block";
+        }
+        else {
+            Matter.World.clear(engine.world);
+            Engine.clear(engine);
+        
+
+            Map.initLevel(level, world);
+            Hero.init(level);
+            Hero.add(world);
+            Bot.init(level, world);
+        
+    }};
 
     Matter.Events.on(engine, 'beforeUpdate', function(event) {
         Hero.onUpdate(world);

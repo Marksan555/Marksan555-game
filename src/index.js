@@ -5,4 +5,8 @@ window.decomp = decomp;
 
 import Game from './game.js';
 
-Game.init();
+window.startGame = function() {
+    document.getElementById("start-game").style.display = "none";
+    Game.init();
+}
+
