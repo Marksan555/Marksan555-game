@@ -10,10 +10,27 @@ const createFromConfig = (x, y, type) => {
 
     switch (type) {
         case 'ball': return createBall(x, y); break;
-        // case 'box': createBox(x, y); break;
+        case 'redbox': return createRedBox(x, y); break;
     }
 
 };
+
+const createRedBox = (x, y) => {
+    const enemy = Matter.Bodies.rectangle(x, y, 40, 40, {
+        label: "redbox",
+        isStatic: true,
+        render: {
+            sprite: {
+                texture: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/25/Red.svg/768px-Red.svg.png',
+                xScale: 0.05,
+                yScale: 0.05,
+            }
+        }
+    });
+    return enemy;
+};  
+
+    
 
 const createBall = (x, y) => {
     const box = Matter.Bodies.rectangle(x, y+20, 40, 40, {

@@ -174,6 +174,10 @@ const onCollisionStart = (event, world, onKillBot, onFinish) => {
             onFinish();
         } else if (pair.bodyA.label === 'finish' && pair.bodyB.label === 'body') {
             onFinish();
+        } else if (pair.bodyA.label === 'redbox' && pair.bodyB.label === 'bullet') {    
+            Matter.Composite.remove(world, [pair.bodyA, pair.bodyB]);
+        } else if (pair.bodyA.label === 'bullet' && pair.bodyB.label === 'redbox') {     
+            Matter.Composite.remove(world, [pair.bodyA, pair.bodyB]);
         }
     }
 };
