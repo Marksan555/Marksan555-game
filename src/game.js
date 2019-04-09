@@ -43,7 +43,24 @@ const init = () => {
     Hero.add(world);
     Bot.init(level, world);
 
- 
+    const onRedBoxKill = () => {
+        const allBodies = Matter.Composite.allBodies(world);
+        let canShowFinish = true;
+        allBodies.forEach(element => {
+            if (element.label === "redbox") {
+                canShowFinish = false;
+            }
+        });
+        if (canShowFinish) {
+            showFinish();
+        }
+    
+       
+    }
+
+    const showFinish = () => {
+        Map.initFinish(level, world);
+    }
 
 
     const onFinish = () => {
@@ -73,7 +90,7 @@ const init = () => {
     });
 
     Matter.Events.on(engine, 'collisionStart', function(event) {
-        Hero.onCollisionStart(event, world, Bot.onKillBot, onFinish);
+        Hero.onCollisionStart(event, world, Bot.onKillBot, onFinish, onRedBoxKill);
     });
 
     Render.lookAt(render, {
@@ -84,5 +101,5 @@ const init = () => {
 };
 
 export default {
-    init
+    init,
 };

@@ -85,10 +85,12 @@ const init = (level, w) => {
 
 const onKillBot = (bot) => {
     Matter.World.remove(world, bot);
-    createBox(bot.position.x, bot.position.x)
+    createBox(bot.position.x, bot.position.x);
+    showFinish()
 };
 
 export default {
     init,
-    onKillBot
+    onKillBot,
+    
 };

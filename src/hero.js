@@ -24,7 +24,7 @@ const init = (level) => {
     hero = Matter.Bodies.rectangle(config.x, config.y, 15, 30, { 
         collisionFilter: {category: 1},
         inertia: Infinity, 
-        label: 'body', 
+        label: 'body',
         render: {
             // options: {
             //     heigth: 20,
@@ -150,7 +150,7 @@ const makeFire = (x, y, world) => {
     }, 10);
 };
 
-const onCollisionStart = (event, world, onKillBot, onFinish) => {
+const onCollisionStart = (event, world, onKillBot, onFinish, onRedBoxKill) => {
     var pairs = event.pairs;
 
     for (var i = 0, j = pairs.length; i != j; ++i) {
@@ -176,8 +176,10 @@ const onCollisionStart = (event, world, onKillBot, onFinish) => {
             onFinish();
         } else if (pair.bodyA.label === 'redbox' && pair.bodyB.label === 'bullet') {    
             Matter.Composite.remove(world, [pair.bodyA, pair.bodyB]);
+            onRedBoxKill();
         } else if (pair.bodyA.label === 'bullet' && pair.bodyB.label === 'redbox') {     
             Matter.Composite.remove(world, [pair.bodyA, pair.bodyB]);
+            onRedBoxKill();
         }
     }
 };

@@ -30,12 +30,17 @@ import Config from './config';
 
 const initLevel = (level, world) => {
     const levelConfig = Config.getLevelConfig(level);
-    const FinishConfig = Config.getFinishConfig(level);
+    
     levelConfig.svgs.map((svg) => {
         getBodyFromConfig(svg.path, svg.x, svg.y, world);
     });
-    renderFinish(FinishConfig, world);
+    
 };
+
+const initFinish = (level, world) => {
+    const FinishConfig = Config.getFinishConfig(level);
+    renderFinish(FinishConfig, world);
+}
 
 const getBodyFromConfig = (path, x, y, world) => {
 
@@ -90,5 +95,6 @@ const add = (world) => {
 export default {
     initLevel,
     init,
-    add
+    add,
+    initFinish
 };
