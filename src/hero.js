@@ -38,10 +38,7 @@ const init = (level) => {
         }
     });
     gun = Matter.Bodies.rectangle(config.x, config.y, 20, 4, { collisionFilter: {mask: 2}});
-    // gun.position.x = gun.bounds.min.x+2;
-    // gun.position.y = gun.bounds.min.y;
-    // gun.positionPrev.x = gun.bounds.min.x+2;
-    // gun.positionPrev.y = gun.bounds.min.y;
+
 
 
     body = Matter.Constraint.create({
@@ -61,9 +58,6 @@ const init = (level) => {
         // length: 0
         }});
 
-    // hero = Matter.Body.create({
-    //     parts: [body, gun],          // composing 2 parts into 1
-    // });
 
     // HERO LEFT and RIGHT
     $('body').on('keydown', function(e) {
@@ -98,11 +92,19 @@ const init = (level) => {
         }
     });
 
-};
+    $('body').on('click', function(e) {
+        shoot = true;
+    });
 
+};
 const add = (world) => {
     Matter.World.add(world, [body, gun, hero]);
 };
+
+const onMouseDown = (x, y) => {
+    const angle = Math.atan2(y - gun.position.y, x - gun.position.x);
+    Matter.Body.setAngle( gun, angle);
+}
 
 const onUpdate = (world) => {
         if (left) {
@@ -120,7 +122,7 @@ const onUpdate = (world) => {
             var bullet = Matter.Bodies.circle(hero.position.x+5, hero.position.y, 3, {label: 'bullet'}); //creating a body("bullet") and putting a label on it
             Matter.World.add(world, [bullet]);      // adding "bullet" to the world
 
-            Matter.Body.setVelocity( bullet, {x: Math.cos(gun.angle)*10, y: Math.sin(gun.angle)*10}); // Sets the linear velocity of the body instantly.
+            Matter.Body.setVelocity( bullet, {x: Math.cos(gun.angle)*14, y: Math.sin(gun.angle)*14}); // Sets the linear velocity of the body instantly.
         }
         if (angleUp) {
             Matter.Body.setAngle( gun, gun.angle - 0.1); // if the player presses "up arrow key", the gun will move counterclockwise
@@ -193,5 +195,6 @@ export default {
     add,
     onUpdate,
     onCollisionStart,
-    getBody
+    getBody,
+    onMouseDown
 };

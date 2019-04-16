@@ -32,6 +32,23 @@ const init = () => {
 
     Render.run(render);
 
+    var mouse = Matter.Mouse.create(render.canvas),
+    mouseConstraint = Matter.MouseConstraint.create(engine, {
+        mouse: mouse,
+        constraint: {
+            stiffness: 0.2,
+            render: {
+                visible: false
+            }
+        }
+    });
+
+    Matter.World.add(world, mouseConstraint);
+
+    render.mouse = mouse;
+
+
+
     // create runner
     var runner = Runner.create();
     Runner.run(runner, engine);
@@ -42,6 +59,11 @@ const init = () => {
     Hero.init(level);
     Hero.add(world);
     Bot.init(level, world);
+
+    Matter.Events.on(mouseConstraint, 'mousedown', function(event) {
+        var mousePosition = event.mouse.position;
+        Hero.onMouseDown(mousePosition.x, mousePosition.y);
+    });
 
     const onRedBoxKill = () => {
         const allBodies = Matter.Composite.allBodies(world);
